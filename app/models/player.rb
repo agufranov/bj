@@ -3,10 +3,12 @@ class Player
   include AASM
 
   field :aasm_state
-  field :balance, :type => Integer
-  field :bet, :type => Integer
+  field :balance, :type => Integer, :default => 1000
+  field :bet, :type => Integer, :default => 100
 
   validates_numericality_of :bet, :only_integer => true, :greater_than => 0
+
+  embedded_in :game
 
   aasm do
     state :betting, :initial => true
@@ -24,8 +26,5 @@ class Player
   private
     def do_bet(bet)
       self.update :bet => bet
-      puts 'BET!'
-      puts bet
-      true
     end
 end
