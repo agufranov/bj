@@ -29,4 +29,6 @@ RSpec.describe Player, :type => :model do
     update_result = player.update :balance => 100, :bet => 1000
     expect(update_result).to be false
   end
+
+  # TODO transitions
 end

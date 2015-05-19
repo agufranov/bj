@@ -1,7 +1,17 @@
-div
-  span Balance
-  span = @game.player.balance
-  span Bet
-  span = @game.player.bet
-  span State
-  span = @game.player.aasm_state
+#notice = notice
+div Balance:
+div = @game.player.balance
+br
+div Bet:
+div = @game.player.bet
+br
+div State:
+div = @game.player.aasm_state
+br
+- if @game.player.betting?
+  = form_tag(url_for(:action => :bet), :method => :put)
+    = text_field_tag :bet
+    = submit_tag 'Принять ставку'
+- if @game.player.playing?
+  = form_tag(url_for(:action => :end_move_stub), :method => :put)
+    = submit_tag 'Сходить'
