@@ -3,8 +3,8 @@ class Player
   include AASM
 
   field :aasm_state
-  field :balance, :type => Integer, :default => 1000
-  field :bet, :type => Integer, :default => 100
+  field :balance, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:balance] }
+  field :bet, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:bet] }
 
   validates_numericality_of :bet, :only_integer => true, :greater_than => 0
 

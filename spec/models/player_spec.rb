@@ -7,7 +7,11 @@ RSpec.describe Player, :type => :model do
     expect(game.player).to be_truthy
   end
 
-  it 'should have 100 as default bet' do
-    expect(game.player.bet).to equal 100
+  it 'should have default balance as in config' do
+    expect(game.player.balance).to equal Rails.application.config.player_defaults[:balance]
+  end
+
+  it 'should have default bet as in config' do
+    expect(game.player.bet).to equal Rails.application.config.player_defaults[:bet]
   end
 end
