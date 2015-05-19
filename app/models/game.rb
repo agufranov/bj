@@ -3,10 +3,10 @@ class Game
 
   embeds_one :player
 
-  before_create :b
+  after_initialize :after_initialize
 
   private
-    def b
+    def after_initialize
       self.build_player
     end
 end
