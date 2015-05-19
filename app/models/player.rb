@@ -16,16 +16,16 @@ class Player
     state :playing
 
     event :to_play do
-      transitions :from => :betting, :to => :playing
+      transitions :from => :betting, :to => :playing, :guard => :set_bet
     end
 
     event :to_bet do
-      transitions :from => :playing, :to => :betting, :guard => :do_bet
+      transitions :from => :playing, :to => :betting
     end
   end
 
   private
-    def do_bet(bet)
+    def set_bet(bet)
       self.update :bet => bet
     end
 end
