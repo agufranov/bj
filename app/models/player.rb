@@ -6,6 +6,7 @@ class Player
   field :balance, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:balance] }
   field :bet, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:bet] }
 
+  validates_numericality_of :balance, :only_integer => true, :greater_than => 0
   validates_numericality_of :bet, :only_integer => true, :less_than_or_equal_to => :balance, :greater_than => 0
 
   embedded_in :game
