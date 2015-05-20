@@ -9,7 +9,7 @@ div
     span.card(class=card.suit) = card.display
   - if hand.busted?
     span Много!
-  - if hand.blackjack?
-    span Blackjack!
   - if show_all
+    - if hand.blackjack?
+      span Blackjack!
     .sum Сумма: #{hand.sum}
