@@ -20,7 +20,7 @@ class Card
   end
 
   def display
-    "[#{display_value} #{display_suit}]"
+    "[#{display_suit}#{display_value}]"
   end
 
   def get_value
