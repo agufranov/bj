@@ -8,6 +8,13 @@ br
 div State:
 div = @game.player.aasm_state
 br
+- @game.dealer.hands.each do |hand|
+  h5 Dealer hand
+  = render 'hand', :hand => hand
+- @game.player.hands.each do |hand|
+  h5 Player hand
+  = render 'hand', :hand => hand
+br
 - if @game.player.betting?
   = form_tag(url_for(:action => :bet), :method => :put)
     = text_field_tag :bet

@@ -6,6 +6,7 @@ class GamesController < ApplicationController
   end
 
   def create
+    Game.destroy_all # debug
     @game = Game.new
 
     if @game.save
@@ -19,7 +20,7 @@ class GamesController < ApplicationController
     begin
       @game.player.to_play! bet_params[:bet]
       notice = 'Ставка сделана'
-    rescue AASM::InvalidTransition
+    rescue Mongoid::Errors::Validations
       notice = 'Ставка не сделана'
     end
 

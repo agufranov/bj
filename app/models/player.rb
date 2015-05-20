@@ -1,6 +1,7 @@
 class Player
   include Mongoid::Document
   include AASM
+  include HasHands
 
   field :aasm_state
   field :balance, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:balance] }
@@ -26,6 +27,7 @@ class Player
 
   private
     def set_bet(bet)
-      self.update :bet => bet
+      self.update! :bet => bet
+      self.game.first_deal
     end
 end
