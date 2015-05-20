@@ -15,7 +15,7 @@ class Game
 
   # Начальная раздача карт
   def first_deal
-    [self.dealer, self.player].each { |p| 2.times { p.hands.first.hit } }
+    [self.dealer, self.player].each { |p| 2.times { p.hands.first.hit! } }
     self.save!
   end
 
@@ -25,5 +25,19 @@ class Game
     self.dealer.init_hands
     self.build_player
     self.player.init_hands
+  end
+
+  def notify_player_finished
+    dh, ph = dealer.hands.first, player.hands.first
+    if player.hands.all? &:busted?
+      puts; puts "PLAYER BUSTED!!!!!!!!!!!"; puts
+      # handle
+    else
+      while dh.playing? do
+        dh.hit!
+      end
+      # handle
+    end
+    puts; puts "STOPPED: #{dh.sum} - #{ph.sum}"; puts
   end
 end

@@ -1,4 +1,11 @@
-- hand.cards.each do |card|
-  span = card.display
+- if dealer
+  span
+    |[?]
+  - hand.cards[1..-1].each do |card|
+    span = card.display
+- else
+  - hand.cards.each do |card|
+    span = card.display
+  div Сумма: #{hand.sum}
 span
-  |(Сумма: #{hand.sum})
+  = hand.state

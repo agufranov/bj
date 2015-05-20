@@ -1,22 +1,22 @@
 #notice = notice
 div Счет: #{@game.player.balance}
 div Ставка: #{@game.player.bet}
-- @game.dealer.hands.each do |hand|
-  h5 Dealer hand
-  = render 'hand', :hand => hand
-- @game.player.hands.each do |hand|
-  h5 Player hand
-  = render 'hand', :hand => hand
-  - if hand.playing?
-    div
-      = button_to 'Hit', :action => :hit, :hand_id => hand._id
-      = button_to 'Stand', :action => :stand, :hand_id => hand._id
-br
+- if @game.player.playing?
+  - @game.dealer.hands.each do |hand|
+    h5 Дилер
+    = render 'hand', :hand => hand, :dealer => true
+  - @game.player.hands.each do |hand|
+    h5 Игрок
+    = render 'hand', :hand => hand, :dealer => false
+    - if hand.playing?
+      div
+        = button_to 'Hit', :action => :hand_action, :type => 'hit!', :hand_id => hand._id
+        = button_to 'Stand', :action => :hand_action, :type => 'stand!', :hand_id => hand._id
+        = button_to 'Double', :action => :hand_action, :type => 'double!', :hand_id => hand._id
+        - if hand.can_split?
+          = button_to 'Split', :action => :hand_action, :type => 'split!', :hand_id => hand._id
 - if @game.player.betting?
   = form_tag url_for(:action => :bet)
-    = text_field_tag :bet
+    = text_field_tag :bet, @game.player.bet
     = submit_tag 'Принять ставку'
-- if @game.player.playing?
-  = form_tag url_for(:action => :end_move_stub)
-    = submit_tag 'Сходить'
 = button_to 'Новая игра', :action => :create

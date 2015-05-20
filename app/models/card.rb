@@ -27,10 +27,8 @@ class Card
     if(m = value.to_s.match /c(\d+)/)
       m[1].to_i
     elsif [:j, :q, :k].include? value
-      puts 2
       10
     elsif value == :a
-      puts 3
       { :min => 1, :max => 11 }
     end
   end

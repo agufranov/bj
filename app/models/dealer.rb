@@ -3,4 +3,8 @@ class Dealer
   include HasHands
 
   embedded_in :game
+
+  def player?
+    false
+  end
 end

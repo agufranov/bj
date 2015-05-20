@@ -25,6 +25,10 @@ class Player
     end
   end
 
+  def player?
+    true
+  end
+
   private
     def set_bet(bet)
       self.update! :bet => bet
