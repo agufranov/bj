@@ -6,7 +6,7 @@ div Bet:
 div = @game.player.bet
 br
 div State:
-div = @game.player.aasm_state
+div = @game.player.state
 br
 - @game.dealer.hands.each do |hand|
   h5 Dealer hand
@@ -14,12 +14,16 @@ br
 - @game.player.hands.each do |hand|
   h5 Player hand
   = render 'hand', :hand => hand
+  - if hand.playing?
+    div
+      = button_to 'Hit', :action => :hit
+      = button_to 'Stand', :action => :stand, :hand_id => hand._id
 br
 - if @game.player.betting?
-  = form_tag(url_for(:action => :bet), :method => :put)
+  = form_tag url_for(:action => :bet)
     = text_field_tag :bet
     = submit_tag 'Принять ставку'
 - if @game.player.playing?
-  = form_tag(url_for(:action => :end_move_stub), :method => :put)
+  = form_tag url_for(:action => :end_move_stub)
     = submit_tag 'Сходить'
 = button_to 'Новая игра', :action => :create

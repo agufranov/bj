@@ -38,6 +38,12 @@ class GamesController < ApplicationController
     redirect_to @game, :notice => notice
   end
 
+  def hit
+  end
+
+  def stand
+  end
+
   private
     def set_game
       @game = Game.find params[:id]

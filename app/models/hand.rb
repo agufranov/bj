@@ -1,12 +1,24 @@
 class Hand
   include Mongoid::Document
+  include AASM
+
+  field :state
 
   embeds_many :cards, :as => :has_cards
 
   embedded_in :has_hands, :polymorphic => true
 
+  aasm :column => :state do
+    state :playing, :initial => true
+    state :stand
+  end
+
   def hit
     cards << has_hands.game.take_card.dup
+  end
+
+  def can_hit?
+    true
   end
 
   def sum

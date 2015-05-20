@@ -2,8 +2,10 @@ Rails.application.routes.draw do
   root 'games#new'
 
   resources :games, :only => [:create, :new, :show]
-  put 'games/:id/bet' => 'games#bet'
-  put 'games/:id/end_move_stub' => 'games#end_move_stub'
+  post 'games/:id/bet' => 'games#bet'
+  post 'games/:id/end_move_stub' => 'games#end_move_stub'
+  post 'games/:id/hit' => 'games#hit'
+  post 'games/:id/stand' => 'games#stand'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

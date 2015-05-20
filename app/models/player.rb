@@ -3,7 +3,7 @@ class Player
   include AASM
   include HasHands
 
-  field :aasm_state
+  field :state
   field :balance, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:balance] }
   field :bet, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:bet] }
 
@@ -12,7 +12,7 @@ class Player
 
   embedded_in :game
 
-  aasm do
+  aasm :column => :state do
     state :betting, :initial => true
     state :playing
 
