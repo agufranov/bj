@@ -41,7 +41,7 @@ class GamesController < ApplicationController
   private
     def set_game
       @game = Game.find params[:id]
-      @game.player.reload
+      # @game.player.reload
     end
 
     def bet_params

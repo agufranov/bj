@@ -3,7 +3,8 @@ class Game
 
   embeds_one :player
   embeds_one :dealer
-  field :shoes, :type => Array, :default => ->{ Card.deck } # инициализируем шуз одной колодой
+  embeds_many :shoes, :class_name => 'Card', :as => :has_cards
+  embeds_many :beaten, :class_name => 'Card', :as => :has_cards
   field :beaten, :type => Array, :default => []
 
   before_create :init
@@ -14,11 +15,12 @@ class Game
 
   # Начальная раздача карт
   def first_deal
-    [self.dealer, self.player].each { |p| 2.times { p.hands.first.cards << take_card } }
+    [self.dealer, self.player].each { |p| 2.times { p.hands.first.hit } }
     self.save!
   end
 
   def init
+    self.shoes << Card.deck # инициализируем шуз одной колодой
     self.build_dealer
     self.dealer.init_hands
     self.build_player

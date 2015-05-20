@@ -22,3 +22,4 @@ br
 - if @game.player.playing?
   = form_tag(url_for(:action => :end_move_stub), :method => :put)
     = submit_tag 'Сходить'
+= button_to 'Новая игра', :action => :create

@@ -1,15 +1,19 @@
 class Hand
   include Mongoid::Document
 
-  field :cards, :type => Array, :default => []
+  embeds_many :cards, :as => :has_cards
 
   embedded_in :has_hands, :polymorphic => true
 
+  def hit
+    cards << has_hands.game.take_card.dup
+  end
+
   def sum
     cards.reduce(0) do |sum, card|
-      val = Card.get_value card
+      val = card.get_value
       if val.is_a? Hash
-        if sum + val[:max] < 21
+        if sum + val[:max] <= 21
           val = val[:max]
         else
           val = val[:min]
