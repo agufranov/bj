@@ -69,7 +69,9 @@ class Hand
         stand! if sum > 17
       end
     else
-      stand!
+      has_hands.hands.each do |hand|
+        hand.stand! unless hand.standing?
+      end
     end
   end
 

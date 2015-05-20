@@ -61,8 +61,6 @@ class Game
   end
 
   def notify_player_finished
-    # TODO когда сплит, и в одну руку кладем последнюю карту, во второй надо как-то отключить шаги
-    # например, уведомлять игру после шага, чтобы она проверила количество карт
     dh, ph = dealer.hand, player.hand
     if player.hands.all? &:busted?
       dealer.hand.stand! unless dealer.hand.standing?
