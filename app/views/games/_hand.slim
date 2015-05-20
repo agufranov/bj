@@ -1,4 +1,4 @@
-- if dealer
+- if dealer and not @game.round_finished?
   span
     |[?]
   - hand.cards[1..-1].each do |card|

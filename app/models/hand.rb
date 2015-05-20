@@ -2,7 +2,7 @@ class Hand
   include Mongoid::Document
   include AASM
 
-  field :state
+  field :state, :type => String
 
   embeds_many :cards, :as => :has_cards
 
@@ -14,6 +14,10 @@ class Hand
 
     event :stand, :after => :notify_standing do
       transitions :from => :playing, :to => :standing
+    end
+
+    event :reset do
+      transitions :from => :standing, :to => :playing, :guard => :reset_guard
     end
   end
 
@@ -42,7 +46,15 @@ class Hand
   end
 
   def busted?
-    sum >= 21
+    sum > 21
+  end
+
+  def blackjack?
+    sum == 21
+  end
+
+  def reset_guard
+    self.cards = []
   end
 
   def notify_standing
@@ -51,7 +63,7 @@ class Hand
 
   def check
     if has_hands.player?
-      stand! if busted?
+      stand! if busted? or blackjack?
     else
       stand! if sum > 17
     end

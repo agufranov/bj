@@ -1,43 +1,77 @@
 class Game
   include Mongoid::Document
+  include AASM
 
   embeds_one :player
   embeds_one :dealer
   embeds_many :shoes, :class_name => 'Card', :as => :has_cards
   embeds_many :beaten, :class_name => 'Card', :as => :has_cards
   field :beaten, :type => Array, :default => []
+  field :state, :type => String
 
   before_create :init
 
+  aasm :column => :state do
+    state :new, :initial => true
+    state :started
+    state :round_finished
+    state :insufficient_funds
+
+    event :finish do
+      transitions :from => :started, :to => :round_finished
+    end
+
+    event :new_round do
+      transitions :from => [:round_finished, :new], :to => :started
+    end
+
+    event :to_insufficient_funds do
+      transitions :from => :started, :to => :insufficient_funds
+    end
+  end
+
   def take_card
-    self.shoes.pop
+    shoes.pop
   end
 
   # Начальная раздача карт
   def first_deal
-    [self.dealer, self.player].each { |p| 2.times { p.hands.first.hit! } }
-    self.save!
+    player.hands = [player.hands[0]]
+
+    [dealer, player].each do |p|
+      p.hand.reset! unless p.hand.playing?
+      2.times { p.hand.hit! }
+    end
+
+    save!
+    new_round! unless started?
   end
 
   def init
-    self.shoes << Card.deck # инициализируем шуз одной колодой
-    self.build_dealer
-    self.dealer.init_hands
-    self.build_player
-    self.player.init_hands
+    shoes << Card.deck # инициализируем шуз одной колодой
+    build_dealer
+    dealer.init_hands
+    build_player
+    player.init_hands
   end
 
   def notify_player_finished
-    dh, ph = dealer.hands.first, player.hands.first
+    dh, ph = dealer.hand, player.hand
     if player.hands.all? &:busted?
-      puts; puts "PLAYER BUSTED!!!!!!!!!!!"; puts
-      # handle
-    else
-      while dh.playing? do
-        dh.hit!
-      end
-      # handle
+      dealer.hand.stand! unless dealer.hand.standing?
     end
-    puts; puts "STOPPED: #{dh.sum} - #{ph.sum}"; puts
+
+    while dh.playing? do
+      dh.hit!
+    end
+
+    player.inc :balance => player.bet * (player <=> dealer)
+
+    if player.balance == 0
+      to_insufficient_funds!
+    else
+      finish!
+      player.to_bet! unless player.betting?
+    end
   end
 end

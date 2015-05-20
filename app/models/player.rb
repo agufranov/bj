@@ -3,7 +3,7 @@ class Player
   include AASM
   include HasHands
 
-  field :state
+  field :state, :type => String
   field :balance, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:balance] }
   field :bet, :type => Integer, :default => ->{ Rails.application.config.player_defaults[:bet] }
 
@@ -31,7 +31,7 @@ class Player
 
   private
     def set_bet(bet)
-      self.update! :bet => bet
-      self.game.first_deal
+      update! :bet => bet
+      game.first_deal
     end
 end

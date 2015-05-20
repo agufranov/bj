@@ -1,13 +1,15 @@
 #notice = notice
+- if @game.insufficient_funds?
+  h3 Закончились деньги!
 div Счет: #{@game.player.balance}
 div Ставка: #{@game.player.bet}
-- if @game.player.playing?
+- if @game.started? or @game.round_finished?
   - @game.dealer.hands.each do |hand|
     h5 Дилер
-    = render 'hand', :hand => hand, :dealer => true
+    = render 'hand', :hand => hand, :game => @game, :dealer => true
   - @game.player.hands.each do |hand|
     h5 Игрок
-    = render 'hand', :hand => hand, :dealer => false
+    = render 'hand', :hand => hand, :game => @game, :dealer => false
     - if hand.playing?
       div
         = button_to 'Hit', :action => :hand_action, :type => 'hit!', :hand_id => hand._id
@@ -19,4 +21,5 @@ div Ставка: #{@game.player.bet}
   = form_tag url_for(:action => :bet)
     = text_field_tag :bet, @game.player.bet
     = submit_tag 'Принять ставку'
-= button_to 'Новая игра', :action => :create
+
+= button_to 'Начать заново', :action => :create
