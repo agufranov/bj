@@ -1,13 +1,6 @@
 #notice = notice
-div Balance:
-div = @game.player.balance
-br
-div Bet:
-div = @game.player.bet
-br
-div State:
-div = @game.player.state
-br
+div Счет: #{@game.player.balance}
+div Ставка: #{@game.player.bet}
 - @game.dealer.hands.each do |hand|
   h5 Dealer hand
   = render 'hand', :hand => hand
@@ -16,7 +9,7 @@ br
   = render 'hand', :hand => hand
   - if hand.playing?
     div
-      = button_to 'Hit', :action => :hit
+      = button_to 'Hit', :action => :hit, :hand_id => hand._id
       = button_to 'Stand', :action => :stand, :hand_id => hand._id
 br
 - if @game.player.betting?

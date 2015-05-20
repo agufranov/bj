@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
-  before_action :set_game, :only => [:show, :bet, :end_move_stub]
+  before_action :set_game, :only => [:show, :bet, :end_move_stub, :hit]
 
   def new
     @game = Game.new
@@ -39,6 +39,9 @@ class GamesController < ApplicationController
   end
 
   def hit
+    hand = @game.player.hands.find hand_params[:hand_id]
+    hand.hit
+    redirect_to @game
   end
 
   def stand
@@ -52,5 +55,9 @@ class GamesController < ApplicationController
 
     def bet_params
       params.permit(:bet)
+    end
+
+    def hand_params
+      params.permit(:hand_id)
     end
 end
