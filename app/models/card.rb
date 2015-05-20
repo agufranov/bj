@@ -2,9 +2,10 @@ class Card
   include Mongoid::Document
   include Mongoid::Enum
   
-  enum :suit, [:spades, :hearts, :diamonds, :clubs]
-  enum :value, (2..10).map { |x| "c#{x}".to_sym } + [:k, :j, :q, :a]
-  # enum :value, [:k, :q, :j, :a]
+  # enum :suit, [:spades, :hearts, :diamonds, :clubs]
+  # enum :value, (2..10).map { |x| "c#{x}".to_sym } + [:k, :j, :q, :a]
+  enum :suit, [:spades]
+  enum :value, (2..6).map { |x| "c#{x}".to_sym }
 
   embedded_in :has_cards, :polymorphic => true
 
