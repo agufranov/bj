@@ -2,9 +2,9 @@ class Card
   include Mongoid::Document
   include Mongoid::Enum
   
-  enum :suit, [:spades]#, :hearts, :diamonds, :clubs]
-  # enum :value, (2..10).map { |x| "c#{x}".to_sym } + [:k, :j, :q, :a]
-  enum :value, [:k, :q, :j, :a]
+  enum :suit, [:spades, :hearts, :diamonds, :clubs]
+  enum :value, (2..10).map { |x| "c#{x}".to_sym } + [:k, :j, :q, :a]
+  # enum :value, [:k, :q, :j, :a]
 
   embedded_in :has_cards, :polymorphic => true
 
@@ -12,22 +12,26 @@ class Card
     { :hearts => '♠', :spades => '♥', :diamonds => '♦', :clubs => '♣' }[suit]
   end
 
+  def display_value
+    if(m = value.to_s.match /c(\d+)/)
+      m[1]
+    else value.to_s.upcase!
+    end
+  end
+
   def display
-    "[#{value} #{display_suit}]"
+    "[#{display_value} #{display_suit}]"
   end
 
   def get_value
-    case value
-    when :a2 then 2
-    when :a3 then 3
-    when :a4 then 4
-    when :a5 then 5
-    when :a6 then 6
-    when :a7 then 7
-    when :a8 then 8
-    when :a9 then 9
-    when :a10, :j, :q, :k then 10
-    when :a then { :min => 1, :max => 11 }
+    if(m = value.to_s.match /c(\d+)/)
+      m[1].to_i
+    elsif [:j, :q, :k].include? value
+      puts 2
+      10
+    elsif value == :a
+      puts 3
+      { :min => 1, :max => 11 }
     end
   end
 
