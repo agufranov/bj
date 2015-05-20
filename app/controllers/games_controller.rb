@@ -19,29 +19,31 @@ class GamesController < ApplicationController
   def bet
     begin
       @game.player.to_play! bet_params[:bet]
-      notice = 'Ставка сделана'
+      options = { :notice => 'Ставка сделана' }
     rescue Mongoid::Errors::Validations
-      notice = 'Ставка не сделана'
+      options = { :alert => 'Неверная ставка' }
     end
 
-    redirect_to @game, :notice => notice
-  end
-
-  def end_move_stub
-    begin
-      @game.player.to_bet!
-      notice = 'Ход сделан'
-    rescue AASM::InvalidTransition
-      notice = 'Ход не сделан'
-    end
-
-    redirect_to @game, :notice => notice
+    redirect_to @game, options
   end
 
   def hand_action
     hand = @game.player.hands.find hand_params[:hand_id]
     hand.public_send hand_params[:type]
-    redirect_to @game
+    options = {}
+    if @game.round_finished?
+      case @game.player <=> @game.dealer
+      when 1 then options[:notice] = 'Победа'
+      when -1 then options[:alert] = 'Поражение'
+      when 0 then options[:notice] = 'Ничья'
+      end
+    elsif @game.insufficient_funds?
+      options[:alert] = 'Закончились деньги'
+    elsif @game.out_of_cards?
+      options[:alert] = 'Нет больше карт'
+    end
+      
+    redirect_to @game, options
   end
 
   def stand

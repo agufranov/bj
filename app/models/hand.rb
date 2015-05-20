@@ -62,10 +62,14 @@ class Hand
   end
 
   def check
-    if has_hands.player?
-      stand! if busted? or blackjack?
+    if has_hands.game.shoes.any?
+      if has_hands.player?
+        stand! if busted? or blackjack?
+      else
+        stand! if sum > 17
+      end
     else
-      stand! if sum > 17
+      stand!
     end
   end
 

@@ -1,25 +1,27 @@
-#notice = notice
 - if @game.insufficient_funds?
   h3 Закончились деньги!
+- if @game.out_of_cards?
+  h3 Нет больше карт!
+div Осталось карт: #{@game.shoes.count}
 div Счет: #{@game.player.balance}
 div Ставка: #{@game.player.bet}
-- if @game.started? or @game.round_finished?
+- if !@game.new?
   - @game.dealer.hands.each do |hand|
-    h5 Дилер
+    h3 Дилер
     = render 'hand', :hand => hand, :game => @game, :dealer => true
   - @game.player.hands.each do |hand|
-    h5 Игрок
+    h3 Игрок
     = render 'hand', :hand => hand, :game => @game, :dealer => false
     - if hand.playing?
       div
-        = button_to 'Hit', :action => :hand_action, :type => 'hit!', :hand_id => hand._id
-        = button_to 'Stand', :action => :hand_action, :type => 'stand!', :hand_id => hand._id
-        = button_to 'Double', :action => :hand_action, :type => 'double!', :hand_id => hand._id
+        = button_to 'Hit', { :action => :hand_action, :type => 'hit!', :hand_id => hand._id }, { :class => 'btn btn-success' }
+        = button_to 'Stand', { :action => :hand_action, :type => 'stand!', :hand_id => hand._id }, { :class => 'btn btn-info' }
+        = button_to 'Double', { :action => :hand_action, :type => 'double!', :hand_id => hand._id }, { :class => 'btn btn-danger' }
         - if hand.can_split?
-          = button_to 'Split', :action => :hand_action, :type => 'split!', :hand_id => hand._id
+          = button_to 'Split', { :action => :hand_action, :type => 'split!', :hand_id => hand._id }, { :class => 'btn btn-warning' }
 - if @game.player.betting?
-  = form_tag url_for(:action => :bet)
-    = text_field_tag :bet, @game.player.bet
-    = submit_tag 'Принять ставку'
-
-= button_to 'Начать заново', :action => :create
+  = form_tag url_for(:action => :bet), :class => 'form-bet'
+    .input-group
+      = text_field_tag :bet, [@game.player.bet, @game.player.balance].min, :class => 'form-control'
+      .input-group-btn
+        = submit_tag 'Принять ставку', :class => 'btn btn-success'

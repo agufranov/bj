@@ -3,7 +3,6 @@ Rails.application.routes.draw do
 
   resources :games, :only => [:create, :new, :show]
   post 'games/:id/bet' => 'games#bet'
-  post 'games/:id/end_move_stub' => 'games#end_move_stub'
   post 'games/:id/hand_action' => 'games#hand_action'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

@@ -16,6 +16,7 @@ class Game
     state :started
     state :round_finished
     state :insufficient_funds
+    state :out_of_cards
 
     event :finish do
       transitions :from => :started, :to => :round_finished
@@ -27,6 +28,10 @@ class Game
 
     event :to_insufficient_funds do
       transitions :from => :started, :to => :insufficient_funds
+    end
+
+    event :to_out_of_cards do
+      transitions :from => :started, :to => :out_of_cards
     end
   end
 
@@ -69,6 +74,8 @@ class Game
 
     if player.balance == 0
       to_insufficient_funds!
+    elsif shoes.count < 4
+      to_out_of_cards!
     else
       finish!
       player.to_bet! unless player.betting?

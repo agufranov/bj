@@ -1,11 +1,15 @@
-- if dealer and not @game.round_finished?
-  span
-    |[?]
-  - hand.cards[1..-1].each do |card|
-    span = card.display
-- else
-  - hand.cards.each do |card|
-    span = card.display
-  div Сумма: #{hand.sum}
-span
-  = hand.state
+div
+  - show_all = (!dealer or !@game.started?)
+  - if not show_all
+    - cards = hand.cards[1..-1]
+    span.card ?
+  - else
+    - cards = hand.cards
+  - cards.each do |card|
+    span.card(class=card.suit) = card.display
+  - if hand.busted?
+    span Много!
+  - if hand.blackjack?
+    span Blackjack!
+  - if show_all
+    .sum Сумма: #{hand.sum}

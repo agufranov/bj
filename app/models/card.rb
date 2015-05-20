@@ -9,7 +9,7 @@ class Card
   embedded_in :has_cards, :polymorphic => true
 
   def display_suit
-    { :hearts => '♠', :spades => '♥', :diamonds => '♦', :clubs => '♣' }[suit]
+    { :hearts => '♥', :spades => '♠', :diamonds => '♦', :clubs => '♣' }[suit]
   end
 
   def display_value
@@ -20,7 +20,7 @@ class Card
   end
 
   def display
-    "[#{display_suit}#{display_value}]"
+    "#{display_suit}#{display_value}"
   end
 
   def get_value
