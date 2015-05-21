@@ -17,8 +17,16 @@ module HasHands
       raise NotImplementedError
     end
 
+    def can_double?
+      bet * 2 <= balance and hands.count == 1
+    end
+
+    def can_split?
+      can_double?
+    end
+
     def double_bet
-      update :bet => bet * 2
+      update!(:bet => bet * 2) if can_double?
     end
 
     def <=>(other)

@@ -2,6 +2,8 @@ class Hand
   include Mongoid::Document
   include AASM
 
+  #TODO patternify
+
   field :state, :type => String
 
   embeds_many :cards, :as => :has_cards
@@ -27,7 +29,7 @@ class Hand
   end
 
   def double!
-    if has_hands.player?
+    if has_hands.player? and has_hands.can_double?
       has_hands.double_bet
       hit!
       stand! unless standing?
@@ -35,14 +37,11 @@ class Hand
   end
 
   def split!
-    if can_split?
+    if has_hands.can_double?
+      has_hands.double_bet
       other_hand = has_hands.hands.create
       other_hand.cards << cards.pop.dup
     end
-  end
-
-  def can_split?
-    has_hands.hands.count == 1
   end
 
   def busted?

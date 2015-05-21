@@ -4,7 +4,8 @@
   h3 Нет больше карт!
 div Осталось карт: #{@game.shoes.count}
 div Счет: #{@game.player.balance}
-div Ставка: #{@game.player.bet}
+- unless @game.player.betting?
+  div Ставка: #{@game.player.bet}
 - if !@game.new?
   - @game.dealer.hands.each do |hand|
     h3 Дилер
@@ -16,8 +17,9 @@ div Ставка: #{@game.player.bet}
       div
         = button_to 'Hit', { :action => :hand_action, :type => 'hit!', :hand_id => hand._id }, { :class => 'btn btn-success' }
         = button_to 'Stand', { :action => :hand_action, :type => 'stand!', :hand_id => hand._id }, { :class => 'btn btn-info' }
-        = button_to 'Double', { :action => :hand_action, :type => 'double!', :hand_id => hand._id }, { :class => 'btn btn-danger' }
-        - if hand.can_split?
+        - if @game.player.can_double?
+          = button_to 'Double', { :action => :hand_action, :type => 'double!', :hand_id => hand._id }, { :class => 'btn btn-danger' }
+        - if @game.player.can_split?
           = button_to 'Split', { :action => :hand_action, :type => 'split!', :hand_id => hand._id }, { :class => 'btn btn-warning' }
 - if @game.player.betting?
   = form_tag url_for(:action => :bet), :class => 'form-bet'
