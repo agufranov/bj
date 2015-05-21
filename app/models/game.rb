@@ -6,7 +6,6 @@ class Game
   embeds_one :dealer
   embeds_many :shoes, :class_name => 'Card', :as => :has_cards
   embeds_many :beaten, :class_name => 'Card', :as => :has_cards
-  field :beaten, :type => Array, :default => []
   field :state, :type => String
 
   before_create :init
