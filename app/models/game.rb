@@ -12,11 +12,11 @@ class Game
   before_create :init
 
   aasm :column => :state do
-    state :new, :initial => true
-    state :started
-    state :round_finished
-    state :insufficient_funds
-    state :out_of_cards
+    state :new, :initial => true # перед началом первого раунда
+    state :started # игра идет
+    state :round_finished # раунд завершился, ждем пока игрок сделает ставку
+    state :insufficient_funds # игра завершена (кончились деньги)
+    state :out_of_cards # игра завершена (кончились карты)
 
     event :finish do
       transitions :from => :started, :to => :round_finished
@@ -39,12 +39,12 @@ class Game
     shoes.pop
   end
 
-  # Начальная раздача карт
+  # Начальная раздача карт - по две дилеру и игроку
   def first_deal
-    player.hands = [player.hands[0]]
+    player.hands = [player.hands[0]] # убираем вторую руку игрока (если был сплит)
 
     [dealer, player].each do |p|
-      p.hand.reset! unless p.hand.playing?
+      p.hand.reset! unless p.hand.playing? # переинициализируем руки
       2.times { p.hand.hit! }
     end
 
@@ -60,6 +60,7 @@ class Game
     player.init_hands
   end
 
+  # Callback после завершения хода игрока или дилера.
   def notify_player_finished
     dh, ph = dealer.hand, player.hand
     if player.hands.all? &:busted?

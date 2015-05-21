@@ -35,6 +35,8 @@ class GamesController < ApplicationController
     hand = @game.player.hands.find hand_params[:hand_id]
     hand.public_send hand_params[:type]
     options = {}
+
+    # flash-сообщение
     if @game.round_finished?
       case @game.player <=> @game.dealer
       when 1 then options[:notice] = "Победа. Заработано: #{@game.player.bet}. Счет: #{@game.player.balance}"
@@ -53,9 +55,6 @@ class GamesController < ApplicationController
   private
     def set_game
       @game = Game.find params[:id]
-    end
-
-    def set_hand
     end
 
     def bet_params

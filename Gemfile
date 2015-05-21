@@ -30,4 +30,5 @@ group :development, :test do
   gem 'factory_girl_rails'
 end
 
+# for Heroku
 ruby "2.2.2"

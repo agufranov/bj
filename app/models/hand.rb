@@ -1,3 +1,6 @@
+# Одна "рука" игрока/дилера.
+# Содержит методы для действий пользователя,
+# проверки очков и состояний выигрыша/проигрыша.
 class Hand
   include Mongoid::Document
   include AASM
@@ -23,11 +26,13 @@ class Hand
     end
   end
 
+  # Взять карту
   def hit!
     cards << has_hands.game.take_card.dup if playing?
     check
   end
 
+  # Взять карту, удвоить ставку и завершить ход
   def double!
     if has_hands.player? and has_hands.can_double?
       has_hands.double_bet
@@ -36,11 +41,14 @@ class Hand
     end
   end
 
+  # Разбить на две руки
+  # Для удобства тестирования сплит возможен и при неодинаковых картах!
   def split!
     if has_hands.can_double?
       has_hands.double_bet
       other_hand = has_hands.hands.create
       other_hand.cards << cards.pop.dup
+      # TODO only if equal
     end
   end
 
@@ -60,6 +68,9 @@ class Hand
     has_hands.notify_standing
   end
 
+  # Проверка.
+  # "Рука" переходит в состояние standing,
+  # если блэкджек/проигрыш/закончились карты.
   def check
     if has_hands.game.shoes.any?
       if has_hands.player?
@@ -74,6 +85,7 @@ class Hand
     end
   end
 
+  # Алгоритм подсчета очков, учитывая тузы.
   def sum
     cards.reduce(0) do |sum, card|
       val = card.get_value
