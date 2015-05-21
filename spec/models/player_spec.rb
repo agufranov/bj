@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe Player, :type => :model do
   let(:player) { Game.create.player }
 
-  it 'should create with game' do
+  it 'should have been created with game' do
     expect(player).to be_truthy
   end
 
