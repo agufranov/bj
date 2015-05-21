@@ -18,7 +18,7 @@ class Game
     state :out_of_cards # игра завершена (кончились карты)
 
     event :finish do
-      transitions :from => :started, :to => :round_finished
+      transitions :from => [:new, :started], :to => :round_finished
     end
 
     event :new_round do
@@ -30,7 +30,7 @@ class Game
     end
 
     event :to_out_of_cards do
-      transitions :from => :started, :to => :out_of_cards
+      transitions :from => [:new, :started], :to => :out_of_cards
     end
   end
 
@@ -77,7 +77,7 @@ class Game
     elsif shoes.count < 4
       to_out_of_cards!
     else
-      finish!
+      finish! unless round_finished?
       player.to_bet! unless player.betting?
     end
   end
